@@ -1,0 +1,235 @@
+<div class="p-6  min-h-screen bg-gray-100">
+
+<div class="flex justify-end px-4 ">
+  <button
+     class="bg-blue-100 cursor-pointer border border-blue-700 text-blue-700 px-4 py-2 rounded hover:bg-[#0087BD] hover:text-white hover:shadow-lg transition duration-300"
+    (click)="openfilter()">
+    <i class="fa fa-filter mr-1"></i>
+    {{ isApplyFilter ? 'Hide Filter' : 'Apply Filter' }}
+  </button>
+</div>
+
+<div class="mt-6 px-4 w-full">
+  <!-- Row Container -->
+  <div class="flex flex-col md:flex-row gap-6">
+    <!-- Area/Section-wise Card -->
+    <div class="flex-1 bg-white shadow-2xl rounded-lg overflow-hidden">
+      
+      <!-- Header -->
+      <div class="flex justify-between items-center bg-gradient-to-r from-[#0087BD] to-indigo-600 px-4 py-3">
+        <h2 class="text-lg font-semibold text-white">
+          TO DO List
+        </h2>
+      </div>
+
+      <!-- Task Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+        <!-- Loop through each module if dashboardTasks is defined -->
+      <ng-container *ngIf="!isDashboardTasksEmpty(); else noData">
+          <ng-container *ngFor="let module of objectKeys(dashboardTasks)">
+            <ng-container *ngFor="let item of dashboardTasks[module]">
+              <!-- <div class="bg-white p-4 shadow-lg rounded  flex flex-col justify-between h-full"> -->
+                <div class="bg-white p-4 rounded flex flex-col justify-between h-full"
+                  style="box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);">
+                <div>
+                  <h3 class="font-semibold text-xl text-blue-700 mb-2 ">{{ module }}</h3>
+                  
+                  <p><strong>Ref No:</strong> {{ item.refNo }}</p>
+                  <p><strong>Area:</strong> {{ item.area }}</p>
+                  <p><strong>Details:</strong> {{ item.taskDetails }}</p>
+                </div>
+                <button
+                  class="mt-4 bg-[#0087BD] hover:bg-blue-700 text-white text-sm font-medium py-1 px-3 rounded transition"
+                  (click)="mitigate(item)">
+                  Mitigate
+                </button>
+              </div>
+            </ng-container>            
+          </ng-container>
+        </ng-container>
+        <ng-template #noData>
+  <div class="col-span-full text-center text-gray-500 text-lg py-10">
+    No history found.
+  </div>
+</ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div
+  class="fixed top-[55px] right-0 h-[calc(100%-75px)] w-[500px] bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out"
+  [ngClass]="{ 'translate-x-0': isApplyFilter, 'translate-x-full': !isApplyFilter }">
+  <div class="flex justify-between items-center px-6 py-4 border-b bg-[#0087BD]">
+    <h3 class="text-base font-semibold text-gray-800">Filter Dashboard</h3> 
+     <button type="submit"(click)="isApplyFilter = false"  class="bg-red-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-red-600">
+        <i class="fa fa-remove mr-2"></i> Close
+        </button>
+  </div>
+
+  <div class="p-6 overflow-y-auto h-[calc(100vh-70px)]">
+    <form [formGroup]="filterForm" (ngSubmit)="onSearch()">
+      <label class="block font-medium mb-1 text-gray-700">Date Range</label>
+      <div class="relative  mb-4">
+        <input type="text" name="daterange" formControlName="selected" ngxDaterangepickerMd matInput
+          [locale]="{ applyLabel: 'Ok', format: 'DD-MMM-YYYY' }" [showDropdowns]="true" [showCancel]="true"
+          [autoApply]="true" autocomplete="off" placeholder="Please Select Date"
+          class="w-full border rounded px-3 py-2 focus:ring focus:outline-none" />
+        <button type="button" class="absolute right-2 top-2 text-gray-500 hover:text-gray-700"
+          (click)="openDatepicker()">
+          <i class="fa fa-calendar"></i>
+        </button>
+      </div>
+          
+      <div class="mt-6 flex justify-end gap-2">
+        <button type="submit" class="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-blue-600">
+          Search
+        </button>
+
+        <button type="button" class="bg-gray-300 cursor-pointer text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+          (click)="filterForm.reset()">
+          Reset
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+  <!-- Total Fire Drills -->
+  <div class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl shadow-2xl p-4 flex items-center justify-between">
+    <div>
+      <p class="text-sm font-semibold">Fire Drills</p>
+      <h2 class="text-2xl font-bold cursor-pointer">{{ summary.totalDrills }}</h2>
+    </div>
+    <svg class="w-10 h-10 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3" />
+    </svg>
+  </div>
+
+  <!-- Submitted -->
+  <div class="bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-xl shadow-2xl p-4 flex items-center justify-between">
+    <div>
+      <p class="text-sm font-semibold">Submitted</p>
+      <h2 class="text-2xl font-bold cursor-pointer">{{ summary.totalSubmitted }}</h2>
+    </div>
+    <svg class="w-10 h-10 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+  </div>
+
+  <!-- Draft -->
+  <div class="bg-gradient-to-r from-gray-400 to-gray-600 text-white rounded-xl shadow-2xl p-4 flex items-center justify-between">
+    <div>
+      <p class="text-sm font-semibold">Draft</p>
+      <h2 class="text-2xl font-bold cursor-pointer">{{ summary.totalDraft }}</h2>
+    </div>
+    <svg class="w-10 h-10 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9" />
+    </svg>
+  </div>
+
+  <!-- Review -->
+  <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl shadow-2xl p-4 flex items-center justify-between">
+    <div>
+      <p class="text-sm font-semibold"> Review</p>
+      <h2 class="text-2xl font-bold cursor-pointer">{{ summary.totalReview }}</h2>
+    </div>
+    <svg class="w-10 h-10 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3" />
+    </svg>
+  </div>
+
+  <!-- Released -->
+  <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl shadow-2xl p-4 flex items-center justify-between">
+    <div>
+      <p class="text-sm font-semibold">Released</p>
+      <h2 class="text-2xl font-bold cursor-pointer" >{{ summary.totalReleased }}</h2>
+    </div>
+    <svg class="w-10 h-10 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+  </div>
+</div>
+<!-- <div class="mt-6 px-4">
+  <h2 class="text-lg font-semibold text-gray-700 mb-2">Area-wise Fire Drills</h2>
+  <div class="w-150 h-150">
+  <canvas baseChart
+    [data]="{ labels: areaLabels, datasets: areaChartData }"
+    [type]="'bar'"
+    [options]="baseChartOptions"
+    (chartClick)="onAreaClick($event)">
+  </canvas>
+  </div>
+</div>
+
+ Section-wise Chart 
+<div class="mt-6 px-4" *ngIf="sectionLabels.length">
+  <h2 class="text-lg font-semibold text-gray-700 mb-2">Section-wise Breakdown</h2>
+  <canvas baseChart
+    [data]="{ labels: sectionLabels, datasets: sectionChartData }"
+    [type]="'bar'"
+    [options]="baseChartOptions">
+  </canvas>
+</div> -->
+<div class="mt-6 px-4 w-full">
+  <!-- Row Container for Both Charts -->
+  <div class="flex flex-col md:flex-row gap-6">
+    <!--  Area/Section-wise Chart -->
+    <div class="flex-1 bg-white shadow-2xl  rounded-lg overflow-hidden">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-[#0087BD] to-indigo-600 px-4 py-3">
+        <h2 class="text-lg font-semibold text-white">
+          {{ isDrilledDown ? 'Section-wise Breakdown' : 'Area-wise Fire Drills' }}
+        </h2>
+      </div>
+
+      <!-- Back Button -->
+      <div class="text-right mt-4 px-4" *ngIf="isDrilledDown">
+        <button
+          class="px-4 py-2 cursor-pointer bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200"
+          (click)="goBack()">
+          ⬅ Back to Area View
+        </button>
+      </div>
+
+      <!-- Chart Body -->
+      <div class="p-4">
+        <div class="w-full h-[400px] ">
+          <canvas baseChart
+                  [data]="chartData"
+                  [type]="'bar'"
+                  [options]="baseChartOptions"
+                  (chartClick)="onChartClick($event)"
+                  >
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scenario-wise Chart -->
+    <div class="flex-1 bg-white shadow-2xl rounded-lg overflow-hidden">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-[#0087BD] to-indigo-600 px-4 py-3">
+        <h2 class="text-lg font-semibold text-white">
+          Scenario-wise Fire Drill
+        </h2>
+      </div>
+
+      <!-- Chart Body -->
+      <div class="p-4">
+        <div class="w-full h-[400px]">
+          <canvas baseChart
+                  [data]="scenarioChartData"
+                  [type]="'bar'"
+                  [options]="scenarioChartOptions">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> </div>

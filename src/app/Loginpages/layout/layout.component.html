@@ -1,0 +1,82 @@
+<div class="flex h-screen  font-sans text-sm ">
+  <!-- Sidebar -->
+  <aside [ngClass]="isSidebarOpen ? 'w-64' : 'w-16'"
+    class="bg-[#0087BD] text-white flex-shrink-0 h-full p-4 transition-all duration-300 overflow-hidden">
+
+    <!-- Sidebar Header -->
+    <div class="text-lg font-semibold mb-6 flex items-center gap-3">
+      <button class="text-white text-2xl cursor-pointer"  (click)="toggleSidebar()" aria-label="Toggle Sidebar">
+        <i [ngClass]="['fas', isSidebarOpen ? 'fa-times' : 'fa-bars']"></i>
+      </button>
+      <span *ngIf="isSidebarOpen">Menu</span>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav *ngIf="isSidebarOpen">
+      <ul>
+        <ng-container *ngFor="let item of menu">
+          <li class="mb-2">
+            <!-- Direct route menu -->
+            <a *ngIf="item.route && !item.children?.length" [routerLink]="item.route" routerLinkActive="bg-[#0087BD]"
+              class="block py-2 px-4 rounded hover:bg-[#0f6688] transition-colors duration-200">
+              {{ item.title }}
+            </a>
+            <div *ngIf="item.children?.length" (click)="toggleSubMenu(item)"
+              class="flex items-center justify-between py-2 px-4 font-semibold cursor-pointer hover:bg-[#0f6688] rounded transition">
+              <span class="truncate">{{ item.title }}</span>
+              <i class="fas ml-2" [ngClass]="item.expanded ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+            </div>
+
+
+            <ul *ngIf="item.children?.length && item.expanded" class="pl-4 mt-1">
+              <li *ngFor="let child of item.children">
+                <a [routerLink]="child.route" routerLinkActive="bg-[#0f6688]"
+                  class="block py-1 px-4 rounded hover:bg-[#0f6688] transition">
+                  {{ child.title }}
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ng-container>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content Area -->
+ <div class="flex-1 flex flex-col h-screen">
+  <!-- Header -->
+  <!-- <header class="bg-[#0f6688] shadow p-4 flex justify-between items-center shrink-0"> -->
+    <header class="bg-[#0f6688] shadow py-2 px-4 flex justify-between items-center shrink-0 h-14">
+    <h1 class="text-xl font-bold text-white">Fire Drill</h1> 
+    <!-- text-gray-500  -->
+    <span class="text-xl font-bold text-white  mx-4">
+      Welcome, {{ employeeName }}
+    </span>
+     <div class="flex gap-2 ">
+       <button
+  (click)="HomeClick()"
+  class="text-blue-600 cursor-pointer hover:text-blue-800 transition duration-200 p-1.5 rounded-full bg-blue-100 min-w-[40px] h-10 flex items-center justify-center"
+  title="Home">
+  <i class="fas fa-home fa-lg"></i>
+</button>
+       <button
+  (click)="HelpManual()"
+  class="text-blue-600 cursor-pointer hover:text-blue-800 transition duration-200 p-1.5 rounded-full bg-blue-100 min-w-[40px] h-10 flex items-center justify-center"
+  title="Home">
+  <i class="fas fa-book fa-lg"></i>
+</button>
+    <button
+  (click)="logout()"
+  class="text-blue-600 cursor-pointer hover:text-blue-800 transition duration-200 p-1.5 rounded-full bg-blue-100 min-w-[40px] h-10 flex items-center justify-center"
+  title="Logout">
+  <i class="fas fa-lock fa-lg"></i>
+</button>
+</div>
+  </header>
+ 
+ <main class="flex-1  overflow-y-auto p-6 bg-gray-50">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>
+</div>

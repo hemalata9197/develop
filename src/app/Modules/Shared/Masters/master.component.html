@@ -1,0 +1,64 @@
+<div class="p-4 border border-gray-300 rounded shadow-xl bg-white w-full max-w-6xl">
+  <!-- <h2 class="text-lg font-bold mb-4">{{ formTitle }}</h2> -->
+
+  <form *ngIf="masterForm" [formGroup]="masterForm" (ngSubmit)="onSubmit()">
+    <!-- <div class="grid gap-4 md:grid-cols-6"> -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+      <div *ngFor="let field of fields" [ngClass]="'col-span-' + field.rowWidth + ' col-span-12'">
+        <!-- [ngClass]="'col-span-' + (field.rowWidth ) + ' md:col-span-' + (field.rowWidth )" >  -->
+
+        <div *ngIf="field.type === 'section'" class="col-span-12 font-bold text-blue-700 text-md mb-2">
+          {{ field.label }}
+        </div>
+        <ng-container *ngIf="field.name">
+          <label class="block text-sm font-semibold mb-1 font-bold">
+            {{ field.label }}
+            <span *ngIf="field.required" class="text-red-600">*</span>
+          </label>
+          <input *ngIf="field.type === 'text'" type="text" [formControlName]="field.name"
+            class="w-full p-2 border rounded" />
+
+          <input *ngIf="field.type === 'number'" type="number" [formControlName]="field.name"
+            class="w-full p-2 border rounded" (keypress)="allowOnlyNumbers($event)" />
+
+          <input *ngIf="field.type === 'email'" type="email" [formControlName]="field.name"
+            class="w-full p-2 border rounded" />
+          <!-- 
+    <input *ngIf="field.type === 'password'" type="password" [formControlName]="field.name"
+      class="w-full p-2 border rounded" /> -->
+
+          <select *ngIf="field.type === 'dropdown'" [formControlName]="field.name" class="w-full p-2 border rounded">
+            <option [ngValue]="0">Select</option>
+            <option *ngFor="let option of field.options" [ngValue]="option.id">{{ option.label }}</option>
+          </select>
+
+          <div *ngIf="masterForm.get(field.name)?.invalid && masterForm.get(field.name)?.touched"
+            class="text-red-500 text-sm mt-1">
+
+            <div *ngIf="masterForm.get(field.name)?.errors?.['required']" class="text-red-500 text-sm mt-1">
+              {{ field.label }} is required
+            </div>
+            <ng-container *ngIf="masterForm.get(field.name)?.errors?.['pattern']">
+              Invalid {{ field.label.toLowerCase() }}
+            </ng-container>
+            <ng-container *ngIf="masterForm.get(field.name)?.errors?.['email']">
+              Please enter a valid email address
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="mt-4 flex gap-4">
+      <button type="submit"
+        class="bg-blue-500 border-2 border-blue-500 p-2  px-4 py-1 rounded hover:bg-blue-600 text-white transition shadow-lg hover:shadow-blue-500/100 transition duration-300">
+        Submit
+      </button>
+
+      <button type="button" (click)="cancelEdit()"
+        class="bg-gray-500 border-2 border-gray-500 p-2  px-4 py-1 rounded hover:bg-gray-600 text-white transition shadow-lg hover:shadow-gray-500/100 transition duration-300">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

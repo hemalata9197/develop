@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import "tailwindcss";
+@import './app/shared/styles/shared-datepicker-style.css';
+@media print {
+  input, textarea, select {
+    border: none;
+    background: transparent;
+    color: black;
+    font-size: inherit;
+  }
+
+  button {
+    display: none !important; /* Hide buttons in print */
+  }
+}

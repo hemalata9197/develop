@@ -1,0 +1,166 @@
+<div
+  class="fixed top-[55px] right-0 h-[calc(100%-75px)] w-[500px] bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out"
+  [ngClass]="{ 'translate-x-0': isApplyFilter, 'translate-x-full': !isApplyFilter }">
+  <div class="flex justify-between items-center px-6 py-4 border-b bg-[#0087BD]">
+    <h3 class="text-xl font-semibold text-gray-800">Apply Filter</h3>
+    <button type="submit" (click)="isApplyFilter = false"
+      class="bg-red-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-red-600">
+      <i class="fa fa-remove mr-2"></i> Close
+    </button>
+  </div>
+
+  <div class="p-6 overflow-y-auto h-[calc(100vh-70px)]">
+    <form [formGroup]="filterForm" (ngSubmit)="onSearch()">
+      <label class="block font-medium mb-1 text-gray-700">Date Range</label>
+      <div class="relative  mb-4">
+        <input type="text" name="daterange" formControlName="selected" ngxDaterangepickerMd matInput
+          [locale]="{ applyLabel: 'Ok', format: 'DD-MMM-YYYY' }" [showDropdowns]="true" [showCancel]="true"
+          [autoApply]="true" autocomplete="off" placeholder="Please Select Date"
+          class="w-full border rounded px-3 py-2 focus:ring focus:outline-none" />
+        <button type="button" class="absolute right-2 top-2 text-gray-500 hover:text-gray-700"
+          (click)="openDatepicker()">
+          <i class="fa fa-calendar"></i>
+        </button>
+      </div>
+      <div *ngIf="visibleFilters.includes('Area')" class="relative  mb-4">
+        <label class="block font-medium mb-1 text-gray-700">Area</label>
+        <select formControlName="facility1Id" class="w-full border rounded px-3 py-2 focus:ring focus:outline-none mb-4"
+          (change)="onAreaChange()">
+          <option value="">-- Select Area --</option>
+          <option *ngFor="let facility of AreaList" [value]="facility.id">{{ facility.label }}</option>
+        </select>
+      </div>
+      <div *ngIf="visibleFilters.includes('Section')" class="relative  mb-4">
+        <label class="block font-medium mb-1 text-gray-700">Section</label>
+        <select formControlName="facility2Id"
+          class="w-full border rounded px-3 py-2 focus:ring focus:outline-none mb-4">
+          <option value="">-- Select Section --</option>
+          <option *ngFor="let facility of FilteredSectionList" [value]="facility.id">{{ facility.label }}</option>
+        </select>
+      </div>
+      <div *ngIf="visibleFilters.includes('Scenario')" class="relative  mb-4">
+        <label class="block font-medium mb-1 text-gray-700">Scenario:</label>
+        <select formControlName="scenarioId" class="w-full border rounded px-3 py-2 focus:ring focus:outline-none mb-4">
+          <option value="">-- Select Scenario --</option>
+          <option *ngFor="let scenario of scenarioList" [value]="scenario.id">{{ scenario.label }}</option>
+        </select>
+      </div>
+
+      <div *ngIf="visibleFilters.includes('RefNo')" class="relative  mb-4">
+        <label class="block font-medium mb-1 text-gray-700">Reference No:</label>
+        <input type="text"
+          class="w-full border rounded px-3 py-2 focus:ring focus:outline-none mb-4 placeholder-gray-400"
+          formControlName="refNo" placeholder="Enter Ref No">
+      </div>
+      <div class="mt-6 flex justify-end gap-2">
+        <button type="submit" class="bg-blue-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-blue-600">
+          Search
+        </button>
+
+        <button type="button" class="bg-gray-300 cursor-pointer text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+           (click)="resetFilters()">
+          Reset
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="flex gap-4 my-4">
+  <button class=" p-4 cursor-pointer rounded text-white font-bold shadow-lg hover:shadow-yellow-500/100  bg-gradient-to-r from-yellow-400 to-yellow-600" 
+  (click)="selectReport('FireDrillSummary',true)">Fire Drill Summary Report</button>
+  <button class=" p-4 cursor-pointer rounded text-white font-bold shadow-lg hover:shadow-orange-500/100   bg-gradient-to-r from-orange-400 to-orange-600"
+    (click)="selectReport('RecommandationSummary',true)">Recommendation Summary Report</button>
+  <button class="p-4 cursor-pointer rounded text-white font-bold shadow-lg hover:shadow-green-500/100  bg-gradient-to-r from-green-500 to-emerald-600"
+   (click)="selectReport('ComplianceReport',true)">Recommendation Compliance Report</button>
+</div>
+<div class="flex justify-end mb-4 gap-4">
+  <button   class="bg-green-100 cursor-pointer border border-[#5AB834] text-[#5AB834] px-4 py-2 rounded hover:bg-[#5AB834] hover:text-white hover:shadow-lg transition duration-300"
+  (click)="exportToExcel()">Export to Excel</button>
+  <button class=" bg-red-100 cursor-pointer border border-red-700 text-red-700 px-4 py-2 rounded hover:bg-red-700 hover:text-white hover:shadow-lg transition duration-300" 
+   (click)="exportToPDF()">Export to PDF</button>
+  <button
+    class="bg-blue-100 cursor-pointer border border-blue-700 text-blue-700 px-4 py-2 rounded hover:bg-[#0087BD] hover:text-white hover:shadow-lg transition duration-300"
+    (click)="openfilter()">
+    <i class="fa fa-filter mr-1"></i>
+    {{ isApplyFilter ? 'Hide Filter' : 'Apply Filter' }}
+  </button>
+</div>
+<div class="bg-white p-4 rounded shadow-lg mx-auto w-full max-w-screen-xl px-4 ">
+  <h3 class="text-lg font-bold mb-4">{{ title }}</h3>
+  <div *ngIf="reportData?.length && reportData.length > 0; else noDataTemplate">
+
+    <div class="max-h-[calc(100vh-300px)] max-w-[2000px]  overflow-auto rounded shadow overflow-x-auto">
+      <table class="table-auto min-w-full border-collapse shadow-lg">
+        <thead>
+           
+          <tr class="bg-[#0087BD] text-white text-left">
+             <th class="px-4 py-3 whitespace-nowrap text-sm">Sr. No.</th>
+            <th *ngFor="let field of reportFields" class="px-4 py-3 whitespace-nowrap text-sm">
+              {{ field.label }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of reportData; let i = index" class="even:bg-white odd:bg-blue-100 hover:bg-blue-50">
+  <td class="px-4 py-2 text-sm text-gray-700">{{ i + 1 }}</td>
+  <!-- <td *ngFor="let field of reportFields" class="px-4 py-2 text-sm text-gray-700">
+    {{ item[field.name] || ' ' }}
+  </td> -->
+  <!-- <td *ngFor="let field of reportFields" class="px-4 py-2 text-sm text-gray-700">
+  <span
+    class="block max-w-xs truncate "
+    [title]="item[field.name] ? item[field.name].toString() : ''">
+    {{
+      item[field.name]
+        ? item[field.name].split(' ').slice(0, 3).join(' ') + (item[field.name].split(' ').length > 3 ? '...' : '')
+        : ' '
+    }}
+  </span>
+</td> -->
+<td *ngFor="let field of reportFields" class="px-4 py-2 text-sm text-gray-700">
+  <ng-container *ngIf="item[field.name] != null">
+    <span
+      class="block max-w-xs truncate"
+      [title]="item[field.name].toString()">
+      {{
+        item[field.name].toString().split(' ').slice(0, 3).join(' ') +
+        (item[field.name].toString().split(' ').length > 3 ? '...' : '')
+      }}
+    </span>
+  </ng-container>
+  <ng-container *ngIf="item[field.name] == null">
+    &nbsp;
+  </ng-container>
+</td>
+</tr>
+        </tbody>
+      </table>
+    </div>
+   <div class="mt-6 flex justify-center items-center space-x-4">
+  <!-- Previous Button -->
+  <button
+    class="px-4 py-2 bg-blue-500 cursor-pointer text-white rounded-lg shadow hover:bg-blue-600 transition duration-200 disabled:bg-blue-300 disabled:cursor-not-allowed"
+    [disabled]="pageIndex === 1" (click)="prevPage()">
+    ◀ Previous
+  </button>
+
+  <!-- Page Info -->
+  <span class="text-lg font-semibold text-gray-800">
+    Page <span class="text-blue-600">{{ pageIndex }}</span> of <span class="text-blue-600">{{ maxPage }}</span>
+  </span>
+
+  <!-- Next Button -->
+  <button
+    class="px-4 py-2 bg-blue-500 cursor-pointer text-white rounded-lg shadow hover:bg-blue-600 transition duration-200 disabled:bg-blue-300 disabled:cursor-not-allowed"
+    [disabled]="pageIndex >= maxPage" (click)="nextPage()">
+    Next ▶
+  </button>
+</div>
+  </div>
+</div>
+<ng-template #noDataTemplate>
+  <div class="text-center text-lg font-semibold text-gray-500 py-8">
+    No Data For Selected Date
+  </div>
+</ng-template>

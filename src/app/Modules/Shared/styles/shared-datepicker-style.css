@@ -1,0 +1,58 @@
+
+/* .daterangepicker td.active,
+.daterangepicker td.active:hover,
+.daterangepicker td.in-range,
+.daterangepicker td.start-date,
+.daterangepicker td.end-date {
+  background-color: #3bf65a !important; 
+  color: #b91818 !important;
+  border-radius: 0.375rem; 
+}
+
+.daterangepicker .calendar-table th,
+.daterangepicker .drp-calendar .month {
+  background-color: #7a0f33; 
+  color: #05894e; 
+}
+
+.daterangepicker .applyBtn {
+  background-color: #3bf6ae !important;
+  color: rgb(205, 37, 37) !important;
+  border: none !important;
+}
+
+.daterangepicker .cancelBtn {
+  color: #8bc313 !important; 
+}
+::ng-deep .daterangepicker td.active {
+  background-color: #3b82f6 !important;
+  color: white !important;
+} */
+
+/* shared-datepicker-style.css */
+
+.daterangepicker td.active,
+.daterangepicker td.active:hover,
+.daterangepicker td.in-range,
+.daterangepicker td.start-date,
+.daterangepicker td.end-date {
+  background-color: #3b82f6 !important; /* Tailwind blue-500 */
+  color: #ffffff !important;
+  border-radius: 0.375rem !important; /* rounded-md */
+}
+
+.daterangepicker .calendar-table th,
+.daterangepicker .drp-calendar .month {
+  background-color: #dbeafe !important; /* Tailwind blue-100 */
+  color: #1d4ed8 !important; /* Tailwind blue-700 */
+}
+
+.daterangepicker .applyBtn {
+  background-color: #3b82f6 !important; /* Tailwind blue-500 */
+  color: white !important;
+  border: none !important;
+}
+
+.daterangepicker .cancelBtn {
+  color: #6b7280 !important; /* Tailwind gray-500 */
+}

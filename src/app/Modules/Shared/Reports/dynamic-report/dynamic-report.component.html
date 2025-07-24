@@ -1,0 +1,32 @@
+<div class="p-4">
+  <h2 class="text-xl font-bold text-blue-800 mb-4">{{ title }}</h2>
+
+  <div class="mb-4">
+    <h3 class="font-semibold">Show/Hide Columns</h3>
+    <label *ngFor="let col of columns" class="mr-4">
+      <input type="checkbox" [checked]="visibleColumns.includes(col.key)" (change)="toggleColumn(col.key)">
+      {{ col.label }}
+    </label>
+  </div>
+
+  <table class="table-auto w-full border-collapse border border-gray-300">
+  <thead>
+    <tr class="bg-blue-500 text-white">
+      <ng-container *ngFor="let col of columns">
+        <th *ngIf="visibleColumns.includes(col.key)" class="px-4 py-2">
+          {{ col.label }}
+        </th>
+      </ng-container>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of data" class="even:bg-white odd:bg-blue-50">
+      <ng-container *ngFor="let col of columns">
+        <td *ngIf="visibleColumns.includes(col.key)" class="px-4 py-2">
+          {{ row[col.key] }}
+        </td>
+      </ng-container>
+    </tr>
+  </tbody>
+</table>
+</div>

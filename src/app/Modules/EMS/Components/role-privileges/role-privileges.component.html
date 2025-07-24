@@ -1,0 +1,73 @@
+<div class="p-4 bg-white rounded max-w-6xl mx-auto shadow-lg">
+  <h2 class="text-xl font-bold text-blue-700 mb-4">Manage Access Rights</h2>
+
+  <!-- <div class="rounded-t-md bg-gradient-to-r from-blue-600 to-purple-500 px-4 py-2 mb-4">
+  <h2 class="text-white font-semibold text-lg">Manage Access Rights</h2>
+</div> -->
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <!-- Role Dropdown -->
+  <div class="mb-4 flex items-center">
+  <label class="text-gray-700 font-bold text-lg mr-4 w-24 text-right">Role:</label>
+  <div class="flex flex-col">
+    <select formControlName="role"
+            class="border px-3 py-2 rounded w-64"
+            (change)="onRoleChange()">
+      <option value="" disabled>Select role</option>
+      <option *ngFor="let role of roles" [value]="role.id">{{ role.label }}</option>
+    </select>
+    <div *ngIf="form.get('role')?.touched && form.get('role')?.invalid" class="text-red-600 text-sm mt-1">
+      Role is required.
+    </div>
+  </div>
+</div>
+<div class="rounded-t-md bg-[#0087BD] px-4 py-2 flex justify-between items-center">
+  <h2 class="text-white font-semibold text-lg">Fire Drill</h2>
+  <label class="text-white text-sm flex items-center space-x-1">
+    <input type="checkbox" [(ngModel)]="selectAllChecked" (change)="toggleSelectAll()" class="form-checkbox">
+    <span>Select All</span>
+  </label>
+</div>
+
+<div class="bg-gray-50 border rounded-b-md">
+  <div *ngFor="let group of menusGrouped" class="border-b p-4">
+    <!-- Parent -->
+    <div class="bg-blue-200 px-3 py-2 font-semibold text-gray-800 rounded mb-2 flex items-center space-x-2">
+      <input type="checkbox"
+             [formControl]="getPermissionControl(group.parent.id)" />
+      <span>{{ group.parent.label }}</span>
+    </div>
+
+    <!-- Children -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      <label *ngFor="let child of group.children" class="flex items-center space-x-2">
+        <input type="checkbox" [formControl]="getPermissionControl(child.id)" />
+        <span>{{ child.label }}</span>
+      </label>
+    </div>
+  </div>
+</div>
+<!-- 
+   <div class="rounded-t-md bg-gradient-to-r from-blue-600 to-purple-500 px-4 py-2 flex justify-between items-center">
+  <h2 class="text-white font-semibold text-lg">Menus</h2>
+  <label class="text-white text-sm flex items-center space-x-1">
+    <input type="checkbox" [(ngModel)]="selectAllChecked" (change)="toggleSelectAll()" class="form-checkbox">
+    <span>Select All</span>
+  </label>
+</div>
+
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-gray-50 p-4 border rounded-b-md">
+  <label *ngFor="let menu of menus" class="flex items-center space-x-2">
+    <input type="checkbox" [formControl]="getPermissionControl(menu.id)" />
+    <span>{{ menu.label }}</span>
+  </label>
+</div> -->
+
+    <!-- Submit Button -->
+    <div class="text-center mt-6">
+      <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+        Save
+      </button>
+    </div>
+  </form>
+</div>

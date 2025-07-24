@@ -1,0 +1,15 @@
+ <div class="p-6">
+      <select class="mb-4 border px-2 py-1" [(ngModel)]="selectedReport" (change)="loadReport()">
+        <option value="">Select Report</option>
+        <option value="incident">Incident Report</option>
+        <option value="pssr">PSSR Report</option>
+      </select>
+
+      <app-fire-drill-summary-report *ngIf="selectedReport === 'incident'" (reportData)="setReport($event)" />
+
+      <app-dynamic-report *ngIf="report.columns.length"
+        [title]="report.title"
+        [columns]="report.columns"
+        [data]="report.data">
+      </app-dynamic-report>
+    </div>

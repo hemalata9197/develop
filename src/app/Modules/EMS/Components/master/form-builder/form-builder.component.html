@@ -1,0 +1,34 @@
+<!-- <button (click)="addSection()" class="bg-green-600 text-white px-4 py-2 rounded mb-4">+ Add Section</button>
+
+<div *ngFor="let section of sections" class="mb-6 p-4 border rounded shadow-sm bg-gray-50">
+  <div class="flex justify-between mb-2">
+    <h3 class="text-lg font-semibold">{{ section.sectionName }}</h3>
+    <div>
+      <button (click)="addField(section.id)" class="text-blue-600">+ Add Field</button>
+      <button (click)="deleteSection(section.id)" class="text-red-600 ml-2">🗑️ Delete Section</button>
+    </div>
+  </div>
+
+  <table class="w-full table-auto text-sm border">
+    <thead class="bg-gray-200">
+      <tr>
+        <th class="p-2 text-left">Label</th>
+        <th>Type</th>
+        <th>Placeholder</th>
+        <th>Order</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let field of section.fields">
+        <td class="p-2">{{ field.label }}</td>
+        <td>{{ field.type }}</td>
+        <td>{{ field.placeholder }}</td>
+        <td>{{ field.orderIndex }}</td>
+        <td>
+          <button (click)="deleteField(field.id)" class="text-red-600">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div> -->
